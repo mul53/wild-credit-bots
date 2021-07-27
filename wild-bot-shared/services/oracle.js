@@ -1,6 +1,6 @@
 const BigNumber = require('bignumber.js')
 const { web3 } = require("./web3")
-const CHAINLINK_ORACLE_ABI = require("../../shared/constants/abi/chainlinkPriceFeed.json")
+const CHAINLINK_ORACLE_ABI = require("../constants/abi/chainlinkPriceFeed.json")
 const { ETH_USD_ORACLE } = require('../constants')
 
 const fetchETHUSDPrice = async () => {
