@@ -1,8 +1,8 @@
 const Discord = require('discord.js')
-const { poll } = require('wild-bot-shared/utils/poll')
-const { fetchETHUSDPrice } = require('wild-bot-shared/services/oracle')
-const { fetchPrice } = require('wild-bot-shared/services/uniswap')
-const { WILD_ADDRESS } = require('wild-bot-shared/constants')
+const { poll } = require('./utils/poll')
+const { fetchETHUSDPrice } = require('./services/oracle')
+const { fetchPrice } = require('./services/uniswap')
+const { WILD_ADDRESS } = require('./constants')
 
 const bot = new Discord.Client()
 
