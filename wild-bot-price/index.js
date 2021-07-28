@@ -13,8 +13,14 @@ const fetchWildPrice = async () => {
 }
 
 const refreshWildPrice = async () => {
-    const wildPrice = await fetchWildPrice()
-    bot.user.setActivity(wildPrice, { type: 'WATCHING' })
+    try {
+        const wildPrice = await fetchWildPrice()
+        const formattedWildPrice = wildPrice.toFixed(4).toString()
+        
+        await bot.user.setActivity(`$${formattedWildPrice}`, { type: 'WATCHING' })
+    } catch (e) {
+        console.error('Failed to refresh wild price')
+    }
 }
 
 bot.on('ready', () => {
