@@ -13,7 +13,8 @@ const fetchPriceQuery = (address) => {
 
 const fetchPrice = async (address) => {
     const result = await uniswapClient.query({
-        query: fetchPriceQuery(address)
+        query: fetchPriceQuery(address),
+        fetchPolicy: 'no-cache'
     })
     return result?.data?.token?.derivedETH 
 }
