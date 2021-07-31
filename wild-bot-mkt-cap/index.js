@@ -47,7 +47,7 @@ const refreshMktCap = async () => {
         const marketCap = await fetchMktCap()
         await bot.user.setActivity(marketCap, { type: 'WATCHING' })
     } catch (e) {
-        console.error('Failed to refresh fully diluted valuation')
+        console.error('Failed to refresh market cap', e)
     }
 }
 
