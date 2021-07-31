@@ -25,7 +25,7 @@ const refreshWildPrice = async () => {
 
 bot.on('ready', () => {
     console.log('WildPriceBot ready...')
-    poll({ fn: refreshWildPrice, interval: 15000 })
+    poll({ fn: refreshWildPrice, interval: 60000 })
 })
 
 bot.login(process.env.BOT_TOKEN)

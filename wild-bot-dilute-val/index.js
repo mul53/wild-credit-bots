@@ -39,7 +39,7 @@ const refreshFullyDilutedValuation = async () => {
 
 bot.on('ready', () => {
     console.log('WildDiluteValBot ready...')
-    poll({ fn: refreshFullyDilutedValuation, interval: 15000 })
+    poll({ fn: refreshFullyDilutedValuation, interval: 60000 })
 })
 
 bot.login(process.env.BOT_TOKEN)

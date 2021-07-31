@@ -53,7 +53,7 @@ const refreshMktCap = async () => {
 
 bot.on('ready', () => {
     console.log('WildMktCapBot ready...')
-    poll({ fn: refreshMktCap, interval: 15000 })
+    poll({ fn: refreshMktCap, interval: 60000 })
 })
 
 bot.login(process.env.BOT_TOKEN)
