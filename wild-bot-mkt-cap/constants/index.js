@@ -1,0 +1,15 @@
+exports.WILD_ADDRESS = "0x08a75dbc7167714ceac1a8e43a8d643a4edd625a"
+
+exports.UNISWAP_SUBGRAPH_URL = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
+
+exports.INFURA_URL = "https://mainnet.infura.io/v3/eab5c3b10b2b409e998a7528d7d81275"
+
+exports.ETH_USD_ORACLE = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419"
+
+exports.TREASURY_ADDRESS = "0xa941381f83fd4c5fd7f5451b7f517aaf16ee8c2a"
+
+exports.FOUNDER_VESTING_ADDRESS = "0xd734723a6bf480254a3de30be6b22eb4fcf6b128"
+
+exports.STAKING_REWARDS_ADDRESS = "0x3220269e3CfA62270F4d0e5c4245D7b6a0079777"
+
+exports.REWARDS_DISTRIBUTION_ADDRESS = "0x0fD91A3F5F3D79AfC95bf756Fea351b1F51A668c"
