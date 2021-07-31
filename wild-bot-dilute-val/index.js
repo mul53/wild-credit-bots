@@ -6,6 +6,7 @@ const { web3 } = require('./services/web3')
 const { WILD_ADDRESS } = require('./constants')
 const ERC20_ABI = require('./constants/abi/erc20.json')
 const { default: BigNumber } = require('bignumber.js')
+const numeral = require('numeral')
 
 const bot = new Discord.Client()
 
@@ -24,12 +25,21 @@ const fetchFullyDilutedValuation = async () => {
         .multipliedBy(wildPrice)
         .div(new BigNumber('10').pow('18'))
         .toNumber()
-    return parseInt(fullyDilutedValuation)
+    return numeral(parseInt(fullyDilutedValuation)).format('$0.0a')
+}
+
+const refreshFullyDilutedValuation = async () => {
+    try {
+        const tvl = await fetchFullyDilutedValuation()
+        await bot.user.setActivity(tvl, { type: 'WATCHING' })
+    } catch (e) {
+        console.error('Failed to refresh fully diluted valuation')
+    }
 }
 
 bot.on('ready', () => {
     console.log('WildDiluteValBot ready...')
-    poll({ fn: fetchFullyDilutedValuation, interval: 15000 })
+    poll({ fn: refreshFullyDilutedValuation, interval: 15000 })
 })
 
 bot.login(process.env.BOT_TOKEN)

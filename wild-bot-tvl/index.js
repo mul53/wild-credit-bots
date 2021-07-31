@@ -1,4 +1,5 @@
 const Discord = require('discord.js')
+const numeral = require('numeral')
 const { poll } = require('./utils/poll')
 const { fetchETHUSDPrice } = require('./services/oracle')
 const { fetchPrice } = require('./services/uniswap')
@@ -15,31 +16,6 @@ const bot = new Discord.Client()
 const weiToNumber = (value, decimals = 18) => !value 
     ? 0 
     : new BigNumber(value).div(new BigNumber('10').pow(decimals))
-
-const fetchWildPrice = async () => {
-    const ethUSD = await fetchETHUSDPrice()
-    const wildEth = await fetchPrice(WILD_ADDRESS)
-    const wildUSD = ethUSD * wildEth
-    return wildUSD.toFixed(4).toString()
-}
-
-const fetchCirculationSupply = async () => {
-    const wildToken = new web3.eth.Contract(ERC20_ABI, WILD_ADDRESS)
-
-    const totalSupply = await wildToken.methods.totalSupply().call()
-    const treasuryBalance = await wildToken.methods.balanceOf(TREASURY_ADDRESS).call()
-    const founderVestingBalance = await wildToken.methods.balanceOf(FOUNDER_VESTING_ADDRESS).call()
-    const stakingBalance = await wildToken.methods.balanceOf(STAKING_REWARDS_ADDRESS).call()
-    const rewardsBalance = await wildToken.methods.balanceOf(REWARDS_DISTRIBUTION_ADDRESS).call()
-
-    return new BigNumber(totalSupply)
-        .minus(treasuryBalance)
-        .minus(founderVestingBalance)
-        .minus(stakingBalance)
-        .minus(rewardsBalance)
-        .div(new BigNumber('10').pow('18'))
-        .toNumber()
-}
 
 const fetchPairs = async () => {
     const factory = new web3.eth.Contract(PAIR_FACTORY_ABI, FACTORY_ADDRESS)
@@ -87,12 +63,21 @@ const fetchTvl = async () => {
         tvl += pairUSDValue
     }
 
-    return tvl
+    return numeral(tvl).format('$0.0a')
+}
+
+const refreshTvl = async () => {
+    try {
+        const tvl = await fetchTvl()
+        await bot.user.setActivity(tvl, { type: 'WATCHING' })
+    } catch (e) {
+        console.error('Failed to refresh tvl')
+    }
 }
 
 bot.on('ready', () => {
     console.log('WildTvlBot ready...')
-    poll({ fn: fetchTvl, interval: 30000 })
+    poll({ fn: refreshTvl, interval: 30000 })
 })
 
 

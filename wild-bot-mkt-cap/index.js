@@ -6,6 +6,7 @@ const { web3 } = require('./services/web3')
 const { WILD_ADDRESS, TREASURY_ADDRESS, FOUNDER_VESTING_ADDRESS, STAKING_REWARDS_ADDRESS, REWARDS_DISTRIBUTION_ADDRESS } = require('./constants')
 const ERC20_ABI = require('./constants/abi/erc20.json')
 const { default: BigNumber } = require('bignumber.js')
+const numeral = require('numeral')
 
 const bot = new Discord.Client()
 
@@ -38,12 +39,21 @@ const fetchMktCap = async () => {
     const wildPrice = await fetchWildPrice()
     const circulationSupply = await fetchCirculationSupply()
     const mktCap = wildPrice * circulationSupply
-    return parseInt(mktCap)
+    return numeral(parseInt(mktCap)).format('$0.0a')
+}
+
+const refreshMktCap = async () => {
+    try {
+        const marketCap = await fetchMktCap()
+        await bot.user.setActivity(marketCap, { type: 'WATCHING' })
+    } catch (e) {
+        console.error('Failed to refresh fully diluted valuation')
+    }
 }
 
 bot.on('ready', () => {
     console.log('WildMktCapBot ready...')
-    poll({ fn: fetchMktCap, interval: 15000 })
+    poll({ fn: refreshMktCap, interval: 15000 })
 })
 
 bot.login(process.env.BOT_TOKEN)
