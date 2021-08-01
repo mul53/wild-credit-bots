@@ -4,7 +4,7 @@ const { poll } = require('./utils/poll')
 const { fetchETHUSDPrice } = require('./services/oracle')
 const { fetchPrice } = require('./services/uniswap')
 const { web3 } = require('./services/web3')
-const { WILD_ADDRESS, TREASURY_ADDRESS, FOUNDER_VESTING_ADDRESS, STAKING_REWARDS_ADDRESS, REWARDS_DISTRIBUTION_ADDRESS, FACTORY_ADDRESS, UNISWAP_ORALCE_ADDRESS } = require('./constants')
+const { FACTORY_ADDRESS, UNISWAP_ORALCE_ADDRESS } = require('./constants')
 const ERC20_ABI = require('./constants/abi/erc20.json')
 const PAIR_FACTORY_ABI = require('./constants/abi/pairFactory.json')
 const PAIR_ABI = require('./constants/abi/pair.json')
@@ -33,6 +33,11 @@ const fetchPairs = async () => {
 const fetchPairUSDValue = async (pair) => {
     const { pair: pairAddress, tokenA, tokenB } = pair
 
+    const tokenAContract = new web3.eth.Contract(ERC20_ABI, tokenA)
+    const tokenBContract = new web3.eth.Contract(ERC20_ABI, tokenB)
+    const tokenADecimals = await tokenAContract.methods.decimals().call()
+    const tokenBDecimals = await tokenBContract.methods.decimals().call()
+
     const pairContract = new web3.eth.Contract(PAIR_ABI, pairAddress)
     const tokenALP = await pairContract.methods.lpToken(tokenA).call()
     const tokenBLP = await pairContract.methods.lpToken(tokenB).call()
@@ -47,8 +52,8 @@ const fetchPairUSDValue = async (pair) => {
     const tokenAUSD = await oracleContract.methods.tokenPrice(tokenA).call()
     const tokenBUSD = await oracleContract.methods.tokenPrice(tokenB).call()
 
-    const tokenABalanceUSD = weiToNumber(tokenALPBalance) * weiToNumber(tokenAUSD)
-    const tokenBBalanceUSD = weiToNumber(tokenBLPBalance) * weiToNumber(tokenBUSD)
+    const tokenABalanceUSD = weiToNumber(tokenALPBalance, tokenADecimals) * weiToNumber(tokenAUSD)
+    const tokenBBalanceUSD = weiToNumber(tokenBLPBalance, tokenBDecimals) * weiToNumber(tokenBUSD)
 
     return tokenABalanceUSD + tokenBBalanceUSD
 }
@@ -79,6 +84,5 @@ bot.on('ready', () => {
     console.log('WildTvlBot ready...')
     poll({ fn: refreshTvl, interval: 60000 })
 })
-
 
 bot.login(process.env.BOT_TOKEN)
