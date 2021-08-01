@@ -82,7 +82,7 @@ const refreshTvl = async () => {
 
 bot.on('ready', () => {
     console.log('WildTvlBot ready...')
-    poll({ fn: refreshTvl, interval: 60000 })
+    poll({ fn: refreshTvl, interval: 180000 })
 })
 
 bot.login(process.env.BOT_TOKEN)
