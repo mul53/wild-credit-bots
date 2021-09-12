@@ -15,7 +15,7 @@ router.get('/loanscan', async (req, res, next) => {
             const tokens = Object.keys(pairRate)
 
             for (const token of tokens) {
-                if (token === 'WETH') continue
+                if (token === 'WETH' || token === 'WBTC') continue
 
                 const rate = pairRate[token]
 
