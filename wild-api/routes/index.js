@@ -3,6 +3,6 @@ const integrations = require('./integrations')
 
 const router = Router()
 
-router('/integrations', integrations)
+router.use('/integrations', integrations)
 
 module.exports = router

@@ -1,4 +1,9 @@
 {
+  "name": "wild-api",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "bignumber.js": "^9.0.1",
     "express": "^4.17.1",

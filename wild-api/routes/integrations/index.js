@@ -5,9 +5,38 @@ const router = Router()
 
 router.get('/loanscan', async (req, res, next) => {
     try {
-        const rates = await pair.getPairRates()
-        const filteredRates = rates.filter(rate => rate.tokenSymbol === 'WETH')
-        res.send(filteredRates)
+        const pairRates = await pair.getRates()
+        const data = {
+            lendRates: [],
+            borrowRates: []
+        }
+        
+        for (const pairRate of pairRates) {
+            const tokens = Object.keys(pairRate)
+
+            for (const token of tokens) {
+                if (token === 'WETH') continue
+
+                const rate = pairRate[token]
+
+                const lendRate = {
+                    apy: rate.supplyApy,
+                    apr: rate.supplyApr,
+                    tokenSymbol: rate.tokenSymbol
+                }
+
+                const borrowRate = {
+                    apy: rate.borrowApy,
+                    apr: rate.borrowApr,
+                    tokenSymbol: rate.tokenSymbol
+                }
+
+                data.lendRates.push(lendRate)
+                data.borrowRates.push(borrowRate)
+            }
+        }
+
+        res.json(data)
     } catch (e) {
         next(e)
     }
